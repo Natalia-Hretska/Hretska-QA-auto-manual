@@ -1,7 +1,7 @@
 import pytest
 from modules.api.clients.github import GitHub
 
-class User:
+class User():
 
     def __init__(self):
         self.name = None

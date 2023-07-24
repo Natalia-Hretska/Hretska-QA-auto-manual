@@ -1,2 +1,7 @@
-.pytest_cache/*
-__pycache__/* 
+.pytest_cache/
+__pycache__/
+modules/api/clients/__pycache__/
+modules/common/__pycache__/
+tests/database/__pycache__/
+tests/__pycache__/ 
+tests/api/__pycache__/

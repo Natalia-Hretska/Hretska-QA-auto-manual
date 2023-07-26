@@ -25,7 +25,7 @@ def test_check_user_sergii():
     assert user[0][1] == 'Kyiv'
     assert user[0][2] == '3127'
     assert user[0][3] == 'Ukraine'
-
+    
 
 @pytest.mark.database
 def test_product_qnt_update():
@@ -67,4 +67,23 @@ def test_detailed_orders():
     assert orders[0][0] ==1
     assert orders[0][1] == 'Sergii'
     assert orders[0][2] == 'солодка вода'
-    assert orders[0][3] == 'з цукром'
+    assert orders[0][3] == 'з цукром' 
+
+# Tests for the constraints of the "products" table
+#@pytest.fixture
+#def db_instance():
+#    db = Database()
+ #   yield db
+ #   db.cursor.close()
+ #   db.connection.close()
+
+
+
+#@pytest.mark.database
+#def test_negative_quantity_not_allowed(db_instance):
+    
+#    with pytest.raises(Exception) as e:
+#        db_instance.insert_product(5, "Product B", "Description B", -5)
+
+#     assert "CHECK constraint failed" in str(e.value)
+

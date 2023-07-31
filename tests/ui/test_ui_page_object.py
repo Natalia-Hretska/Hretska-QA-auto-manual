@@ -1,5 +1,5 @@
-from modules.ui.page_objects.sign_in_page import SignInPage
 import pytest
+from modules.ui.page_objects.sign_in_page import SignInPage
 
 
 @pytest.mark.ui 

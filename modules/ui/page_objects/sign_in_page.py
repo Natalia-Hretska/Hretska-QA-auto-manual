@@ -33,5 +33,5 @@ class SignInPage(BasePage):
    # Перевіряємо, що назва сторінки така, яку ми очікували
     def check_title(self, expected_title):
         return self.driver.title == expected_title  
-    
+         
        

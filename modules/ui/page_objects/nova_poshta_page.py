@@ -10,11 +10,14 @@ class NovaPoshtaPage(BasePage):
         
     def __init__(self) -> None:
         super().__init__()
-
-     # Відкриваємо сторінку Нової Пошти
-    def search_parcel(self, tracking_number):
+    
+    def go_to_nova_poshta(self):
         self.driver.get(NovaPoshtaPage.URL)
     
+    #def is_homepage_displayed(self):
+
+    def search_parcel(self, tracking_number):
+        
      #Закриваємо popup_mask, якщо він є на сторінці
         try:
             popup_close_btn = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[3]/div[5]/div[1]/i")

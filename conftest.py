@@ -1,6 +1,8 @@
 import pytest
 from modules.api.clients.github import GitHub
 from modules.common.database import Database
+from modules.ui.page_objects.nova_poshta_page import NovaPoshtaPage
+from modules.ui.page_objects.rozetka_cart_page import RozetkaCartPage
 
 class User():
 
@@ -37,3 +39,17 @@ def database():
     db = Database()
 
     yield db
+
+
+@pytest.fixture
+def rozetka_cart_page():
+    rozetka_cart_page = RozetkaCartPage() 
+
+    yield rozetka_cart_page   
+
+
+@pytest.fixture
+def nova_poshta_page():
+    nova_poshta_page = NovaPoshtaPage()
+
+    yield nova_poshta_page

@@ -3,9 +3,9 @@ from modules.ui.page_objects.nova_poshta_page import NovaPoshtaPage
 
 
 @pytest.mark.ui
-def test_search_valid_tracking_number():
-    # Створення об'єкту сторінки
-    nova_poshta_page = NovaPoshtaPage()
+def test_search_valid_tracking_number(nova_poshta_page):
+    nova_poshta_page.go_to_nova_poshta()
+    
 
     # Пошук посилки з валідним номером
     valid_tracking_number = '20450680973761'

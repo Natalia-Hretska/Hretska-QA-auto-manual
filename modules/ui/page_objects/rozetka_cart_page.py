@@ -22,62 +22,51 @@ class RozetkaCartPage(BasePage):
         search_box = self.driver.find_element(By.NAME, 'search')
         search_box.clear()
         search_box.send_keys(item_name)
-        search_button = self.driver.find_element(By.XPATH, "/html/body/app-root/div/div/rz-header/rz-main-header/header/div/div/div/form/button")
+                
+        search_button =  WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".search-form__submit[_ngcontent-rz-client-c42]")))
         search_button.click()
-
-        # Wait for the search results page to load
-        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "goods-tile__inner")))
-        #WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "catalog-grid ng-star-inserted")))
-        # Click on the link of the first product to go to the product details page
-    
-        product_link = self.driver.find_element(By.CSS_SELECTOR, 'a.goods-tile__heading')
-        product_link.click()
         
-           # Wait for the "Add to cart" button to be clickable
-        WebDriverWait(self.driver, 20).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, 'button.buy-button'))
+        # Wait for the search results page to load
+        WebDriverWait(self.driver, 20).until(EC.presence_of_element_located((By.CLASS_NAME, "ng-star-inserted")))
+                  
+        # Wait for the "Add to cart" button to be clickable
+        add_to_cart_button = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.CLASS_NAME, 'goods-tile__buy-button'))
         )
-
-        # Click the "Add to cart" button
-        add_to_cart_button = self.driver.find_element(By.CSS_SELECTOR, 'button.buy-button')
-        add_to_cart_button.click()
-
-    
+        add_to_cart_button.click()             
+   
     def is_item_added_to_cart(self, item_name):
         # ... Implementation for checking if the item is added to the cart
-        # Wait for the cart page to load
-        try:
-            # Wait for the cart modal to load (increase timeout if needed)
-            WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.XPATH, '/html/body/app-root/rz-single-modal-window')))
-            
-            # Find the cart modal element
-            cart_modal = self.driver.find_element(By.XPATH, '/html/body/app-root/rz-single-modal-window')
-             # Print the text of the cart modal
-            print("Cart modal text:")
-            print(cart_modal.text)
+               
+        # Wait for the cart modal to load (increase timeout if needed)
+        cart_button = WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.CLASS_NAME, 'header__button ng-star-inserted')))
+        cart_button.click()
+        # Find the cart modal element
+        cart_modal = self.driver.find_element(By.CLASS_NAME, 'cart-list__item ng-star-inserted')
+         # Print the text of the cart modal
+        print("Cart modal text:")
+        print(cart_modal.text)
 
-            # Check if the item name is present in the cart modal text
+        #Check if the item name is present in the cart modal text
+        if item_name in cart_modal.text:
             return item_name in cart_modal.text
-        except TimeoutException:
-            # Handle the timeout exception (e.g., item not added to cart)
-            return False
-    #def get_cart_item_price(self, item_name):
-    #     # Wait for the cart page to load
-    #    WebDriverWait(self.driver, 20).until(EC.visibility_of_element_located((By.CLASS_NAME,'modal__content')))
-#
-    #    # Find all cart items on the page
-    #    cart_items = self.driver.find_elements(By.CLASS_NAME,'modal__content')
-#
-    #    # Loop through the cart items to find the item price
-    #    for cart_item in cart_items:
-    #        item_title = cart_item.find_element(By.CLASS_NAME, 'cart-product_title').text
-    #        if item_title == item_name:
-    #            # If the item is found, extract the price text
-    #            item_price_element = cart_item.find_element(By.CLASS_NAME, 'product-price__big.product-price__big-color-red')
-    #            return item_price_element.text
-#
-    #    # If the item is not found, return None or raise an exception
-    #    return None
+            
+    def get_cart_item_price(self, item_name):
+         # Wait for the cart page to load
+        WebDriverWait(self.driver, 20).until(EC.visibility_of_element_located((By.CLASS_NAME,'modal__content')))
+
+        # Find all cart items on the page
+        cart_items = self.driver.find_elements(By.CLASS_NAME,'cart-list__item ng-star-inserted')
+
+        # Loop through the cart items to find the item price
+        for cart_item in cart_items:
+            item_title = cart_item.find_element(By.CLASS_NAME, 'cart-product__title').text
+            if item_title == item_name:
+                # If the item is found, extract the price text
+                item_price_element = cart_item.find_element(By.CLASS_NAME, 'product-price')
+                return item_price_element.text
+            
+        return None
      
 
 
@@ -97,36 +86,42 @@ class RozetkaCartPage(BasePage):
         else:
             return False
     
-    #def get_cart_item_count(self):
-    #   # ... Implementation for retrieving the number of items in the cart
-    #  # Go to the cart page
-    #    cart_button = self.driver.find_element(By.CLASS_NAME, "header__button")
-    #    cart_button.click()
-##
-    #   # Wait for the cart page to load
-    #    WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, '/html/body/app-root/rz-single-modal-window')))
-#
-    #   # Find all elements representing individual cart items
-    #    cart_item_elements = self.driver.find_elements(By.CLASS_NAME, 'cart-modal__content .cart-product')
-##
-    #   # Return the count of cart item elements, which represents the number of items in the cart
-    #    return len(cart_item_elements)
+
+    def add_multiple_item_to_cart(self, item_names):
+       
+        for item_name in item_names:
+            self.add_item_to_cart(item_name)
+    
+
+    def get_cart_item_count(self):
+       # ... Implementation for retrieving the number of items in the cart
+      # Go to the cart page
+        cart_button = self.driver.find_element(By.CLASS_NAME, "header__button")
+        cart_button.click()
+
+       # Wait for the cart page to load
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'modal__content')))
+
+       # Find all elements representing individual cart items
+        cart_item_elements = self.driver.find_elements(By.CLASS_NAME, 'cart-modal__content .cart-product')
+
+       # Return the count of cart item elements, which represents the number of items in the cart
+        return len(cart_item_elements)
     #
-    #ef clear_cart(self):
-     #   # ... Implementation for removing all items from the cart
-     #   
-     #   # Go to the cart page
-     #   cart_button = self.driver.find_element(By.CLASS_NAME, "header__button")
-     #   cart_button.click()
-     #   
-     #   WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'cart-modal__content')))
-#
-     #   # Find all elements representing individual cart items
-     #   cart_item_elements = self.driver.find_elements(By.CLASS_NAME, 'cart-modal__content .cart-product')
-#
-     #   # Iterate through each cart item and remove it from the cart
-     #   for cart_item in cart_item_elements:
-     #       remove_button = cart_item.find_element(By.ID, 'cartProductActions0')
-     #       remove_button.click()
-     #   
-     #   WebDriverWait(self.driver, 10).until(EC.text_to_be_present_in_element((By.CLASS_NAME, 'empty-text'), 'Кошик порожній'))
+    def clear_cart(self):
+        # ... Implementation for removing all items from the cart
+        
+        # Go to the cart page
+        cart_button = self.driver.find_element(By.CLASS_NAME, "header__button")
+        cart_button.click()
+        
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'cart-modal__content')))
+           # Find all elements representing individual cart items
+        cart_item_elements = self.driver.find_elements(By.CLASS_NAME, 'cart-modal__content .cart-product')
+           # Iterate through each cart item and remove it from the cart
+        for cart_item in cart_item_elements:
+            remove_button = cart_item.find_element(By.ID, 'cartProductActions0')
+            remove_button.click()
+        
+        WebDriverWait(self.driver, 10).until(EC.text_to_be_present_in_element((By.CLASS_NAME, 'empty-text'), 'Кошик порожній'))
+        
